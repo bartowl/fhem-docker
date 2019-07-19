@@ -429,7 +429,12 @@ function PrintNewLines {
 function StopFHEM {
 	echo -e '\n\nSIGTERM signal received, sending "shutdown" command to FHEM!\n'
 	PID=$(<"${PIDFILE}")
-  su fhem -c "cd "${FHEM_DIR}"; perl fhem.pl ${TELNETPORT} shutdown"
+	if [ `id -u` -gt 0 ]; then
+		echo "Running as target user, no su needed"
+		bash -c "cd "${FHEM_DIR}"; perl fhem.pl ${TELNETPORT} shutdown"
+	else
+		su fhem -c "cd "${FHEM_DIR}"; perl fhem.pl ${TELNETPORT} shutdown"
+  	fi
 	echo -e 'Waiting for FHEM process to terminate before stopping container:\n'
 
   # Wait for FHEM to complete shutdown
@@ -531,7 +536,12 @@ function StartFHEM {
 
   echo -n -e "\nStarting FHEM ...\n"
   trap "StopFHEM" SIGTERM
-  su fhem -c "cd "${FHEM_DIR}"; perl fhem.pl "$CONFIGTYPE""
+  if [ `id -u` -gt 0 ]; then
+  	echo "Running as target user, no su needed"
+  	bash -c "cd "${FHEM_DIR}"; perl fhem.pl "$CONFIGTYPE""
+  else
+  	su fhem -c "cd "${FHEM_DIR}"; perl fhem.pl "$CONFIGTYPE""
+  fi
   RET=$?
 
   # If process was unable to restart,
