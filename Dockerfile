@@ -412,6 +412,7 @@ RUN if ( [ "${NPM_PKGS}" != "" ] || [ "${IMAGE_LAYER_NODEJS}" != "0" ] || [ "${I
 # Note: Manual checkout is required if build is not run by Travis:
 RUN  svn co https://svn.fhem.de/fhem/trunk /
 #COPY ./src/fhem/trunk/fhem/ /fhem/
+RUN chown `id -u`:`id -g` / /fhem
 
 VOLUME [ "/opt/fhem" ]
 
