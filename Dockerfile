@@ -410,8 +410,8 @@ RUN if ( [ "${NPM_PKGS}" != "" ] || [ "${IMAGE_LAYER_NODEJS}" != "0" ] || [ "${I
 
 # Add FHEM app layer
 # Note: Manual checkout is required if build is not run by Travis:
-RUN  svn co https://svn.fhem.de/fhem/trunk ./src/fhem/trunk
-COPY ./src/fhem/trunk/fhem/ /fhem/
+RUN  svn co https://svn.fhem.de/fhem/trunk /
+#COPY ./src/fhem/trunk/fhem/ /fhem/
 
 VOLUME [ "/opt/fhem" ]
 
